@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Namaz Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+
+    .topbar {
+      background: linear-gradient(to right, #1c1c1c, #2d2d2d);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .topbar h2 {
+      font-size: 24px;
+    }
+
+    .logout-btn {
+      background: linear-gradient(to right, #ff416c, #ff4b2b);
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: linear-gradient(to right, #ff4b2b, #ff416c);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      min-height: calc(100vh - 60px);
+    }
+
+    .sidebar {
+      width: 240px;
+      background: linear-gradient(to bottom, #2c3e50, #4ca1af);
+      padding: 20px;
+      flex-shrink: 0;
+    }
+
+    .sidebar h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar p {
+      font-size: 14px;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      margin-bottom: 10px;
+    }
+
+    .sidebar button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: linear-gradient(to right, #43cea2, #185a9d);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .main {
+      flex: 1;
+      padding: 25px;
+    }
+
+    .auth-box {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 30px;
+      background: linear-gradient(to bottom right, #1e1e1e, #2c2c2c);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .auth-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .auth-box input,
+    .auth-box button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+    }
+
+    .auth-box input {
+      background-color: #f1f1f1;
+      color: #000;
+    }
+
+    .auth-box button {
+      background: linear-gradient(to right, #00b09b, #96c93d);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .namaz-list label {
+      display: block;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+
+    .namaz-list button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: linear-gradient(to right, #fc4a1a, #f7b733);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .history-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .history-section li {
+      background: rgba(255, 255, 255, 0.1);
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Tablet & below */
+    @media (max-width: 991px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        text-align: center;
+      }
+
+      .main {
+        padding: 20px 15px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .logout-btn {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .auth-box {
+        margin: 40px 20px;
+        padding: 20px;
+      }
+
+      .sidebar button {
+        margin: 8px 0;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 576px) {
+      .topbar h2 {
+        font-size: 20px;
+      }
+
+      .namaz-list label {
+        font-size: 14px;
+      }
+
+      .sidebar h3 {
+        font-size: 16px;
+      }
+
+      .main {
+        padding: 15px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="auth-section" class="auth-box">
+    <h2>Namaz Tracker</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="main-section" class="hidden">
+    <div class="topbar">
+      <h2>Namaz Tracker Dashboard</h2>
+      <div>
+        <span id="today-date"></span><br />
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="container">
+      <div class="sidebar">
+        <h3>Welcome</h3>
+        <p id="user-email"></p>
+        <button onclick="showDashboard()">Dashboard</button>
+        <button onclick="showHistory()">History</button>
+      </div>
+      <div class="main">
+        <div id="dashboard-view">
+          <h3>Mark Today’s Namaz</h3>
+          <div class="namaz-list">
+            <label><input type="checkbox" id="fajr" /> Fajr</label>
+            <label><input type="checkbox" id="zuhr" /> Zuhr</label>
+            <label><input type="checkbox" id="asr" /> Asr</label>
+            <label><input type="checkbox" id="maghrib" /> Maghrib</label>
+            <label><input type="checkbox" id="isha" /> Isha</label>
+            <button onclick="saveNamaz()">Save</button>
+          </div>
+        </div>
+        <div id="history-view" class="hidden">
+          <h3>Namaz History (Last 10 Days)</h3>
+          <div class="history-section">
+            <ul id="history-list"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCZdjSNdP-39JZNV-tpIwBQnMvaYEPzfYA",
+      authDomain: "namaz-tracking-system-748a4.firebaseapp.com",
+      projectId: "namaz-tracking-system-748a4",
+      storageBucket: "namaz-tracking-system-748a4.appspot.com",
+      messagingSenderId: "374959145722",
+      appId: "1:374959145722:web:98abbd6d7dbb4fc8b9dd01"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const authSection = document.getElementById('auth-section');
+    const mainSection = document.getElementById('main-section');
+    const userEmail = document.getElementById('user-email');
+    const historyList = document.getElementById('history-list');
+    const dashboardView = document.getElementById('dashboard-view');
+    const historyView = document.getElementById('history-view');
+    document.getElementById('today-date').textContent = new Date().toDateString();
+
+    function signUp() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => alert("Signup successful"))
+        .catch(error => alert(error.message));
+    }
+
+    function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          authSection.classList.add('hidden');
+          mainSection.classList.remove('hidden');
+          clearCheckboxes();
+        })
+        .catch(error => alert(error.message));
+    }
+
+    function logout() {
+      auth.signOut().then(() => {
+        mainSection.classList.add('hidden');
+        authSection.classList.remove('hidden');
+        clearCheckboxes();
+      });
+    }
+
+    function clearCheckboxes() {
+      ['fajr', 'zuhr', 'asr', 'maghrib', 'isha'].forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        authSection.classList.add('hidden');
+        mainSection.classList.remove('hidden');
+        userEmail.textContent = user.email;
+        loadNamazHistory(user.uid);
+      }
+    });
+
+    function saveNamaz() {
+      const fajr = document.getElementById('fajr').checked;
+      const zuhr = document.getElementById('zuhr').checked;
+      const asr = document.getElementById('asr').checked;
+      const maghrib = document.getElementById('maghrib').checked;
+      const isha = document.getElementById('isha').checked;
+      const today = new Date().toISOString().split('T')[0];
+      const uid = auth.currentUser.uid;
+
+      db.collection('namazData').doc(uid).collection('records').doc(today).set({
+        fajr, zuhr, asr, maghrib, isha,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        alert("Namaz Saved!");
+        loadNamazHistory(uid);
+      });
+    }
+
+    function loadNamazHistory(uid) {
+      historyList.innerHTML = '';
+      db.collection('namazData').doc(uid).collection('records')
+        .orderBy('timestamp', 'desc').limit(10)
+        .get().then(snapshot => {
+          snapshot.forEach(doc => {
+            const data = doc.data();
+            const item = document.createElement('li');
+            item.textContent = `${doc.id}: ${['Fajr', 'Zuhr', 'Asr', 'Maghrib', 'Isha'].filter(n => data[n.toLowerCase()]).join(', ') || 'No Namaz Marked'}`;
+            historyList.appendChild(item);
+          });
+        });
+    }
+
+    function showDashboard() {
+      dashboardView.classList.remove('hidden');
+      historyView.classList.add('hidden');
+    }
+
+    function showHistory() {
+      dashboardView.classList.add('hidden');
+      historyView.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
